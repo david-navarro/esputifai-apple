@@ -1,0 +1,13 @@
+# Build output and caches
+.build/
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.ipa
+
+# Local tool settings
+.claude/
+CLAUDE.md
+soul.md
+.DS_Store
