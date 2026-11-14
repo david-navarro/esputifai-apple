@@ -88,6 +88,8 @@ UserDefaults: `activeList`, `searchKind`, `albumOrder`, `topKind`.
   `AudioLoader` as resource-loader delegate.
 - `AudioLoader` answers content info (`AVFileType.m4a`, length, byte ranges) and serves each data
   request in chunks; responses and `finishLoading` are posted on its serial queue, in order.
+- `AudioFetcher.range` clears the `moov` durations of the first range (`FragmentedMP4`): AVFoundation
+  counts them on top of the fragments, doubling each song. Keep it for streaming and downloads.
 - Ends: `AVPlayerItemDidPlayToEndTime` → `onFinished` (count the play) → next. Failures skip to the
   next song at most once around the queue, then show the error in the player bar.
 - `OfflineAudio.sync(wanted:)` (from `wantedOnPhone`) queues missing songs and deletes unneeded

@@ -1,4 +1,7 @@
 import XCTest
+#if canImport(AVFoundation)
+import AVFoundation
+#endif
 @testable import EsputifaiCore
 
 /// Against the real YouTube Music (needs network). When these fail and the code didn't change,
@@ -38,6 +41,13 @@ final class YouTubeSmokeTests: XCTestCase {
         print("downloaded:", size, "bytes")
         XCTAssertEqual(onDisk, size)
         XCTAssertGreaterThan(size, 1_000_000)
+        #if canImport(AVFoundation)
+        // AVFoundation reads YouTube's header as twice the song's length unless it is fixed.
+        let seconds = try await AVURLAsset(url: file).load(.duration).seconds
+        print("AVFoundation duration:", seconds)
+        XCTAssertLessThan(seconds, 200, "the song lasts 151 s; double means FragmentedMP4 didn't apply")
+        XCTAssertGreaterThan(seconds, 100)
+        #endif
     }
 
     func testCatalog() async throws {

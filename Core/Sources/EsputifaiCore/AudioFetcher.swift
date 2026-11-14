@@ -26,8 +26,16 @@ public enum AudioFetcher {
 
     /// Bytes `start...end` of a track's audio. A 403 means the URL went stale: it is re-resolved
     /// once. Returns the data and the (possibly re-resolved) audio to use for the next range.
+    /// The header is fixed for AVFoundation here, so streaming and downloads both get it.
     public static func range(_ videoId: String, audio: ResolvedAudio?, from start: Int64, through end: Int64,
                              number: Int) async throws -> (Data, ResolvedAudio) {
+        var (data, audio) = try await rawRange(videoId, audio: audio, from: start, through: end, number: number)
+        FragmentedMP4.clearHeaderDurations(&data, offset: start)
+        return (data, audio)
+    }
+
+    private static func rawRange(_ videoId: String, audio: ResolvedAudio?, from start: Int64, through end: Int64,
+                                 number: Int) async throws -> (Data, ResolvedAudio) {
         var a: ResolvedAudio
         if let audio { a = audio } else { a = try await YouTubeMusic.resolveAudio(videoId) }
         for attempt in 0..<2 {

@@ -77,6 +77,7 @@ Core/                         Swift package EsputifaiCore: no UIKit/AVFoundation
     YouTubeMusic.swift        search, albums, playlists, artists, suggestions, radio, audio URLs
     RelatedSongs.swift        "Relacionadas": paged, de-duplicated radio
     AudioFetcher.swift        googlevideo byte ranges (POST, range=, rn=) and whole downloads
+    FragmentedMP4.swift       clears the moov durations AVFoundation would count twice
   Tests/EsputifaiCoreTests/   LibraryTests (no network), YouTubeSmokeTests (real YouTube Music)
 App/
   Sources/
@@ -119,6 +120,10 @@ framework, so it is skipped on Linux). The app itself builds only in Xcode.
   ranges AVPlayer wants with the same request shape as Android (POST `x\0`, `&range=a-b&rn=N`,
   visionOS user agent), 256 KB first then 2 MB chunks; a 403 re-resolves once. Saved songs play
   from their file. The next song's URL is resolved in advance.
+- **Header fix:** YouTube's fragmented MP4 declares the song's duration in `moov` too, and
+  AVFoundation adds it to the fragments': every song lasted twice as long (silence at the end, the
+  play counted late). `AudioFetcher.range` zeroes those fields in the first range, so streamed and
+  saved songs both get the true duration (checked 2026-11-14).
 - **Offline:** whole files in Application Support/offline-audio (`<videoId>.m4a`, not backed up
   to iCloud), two downloads at a time, on any network. iOS suspends apps in the background, so
   downloads run while the app is open or playing; they resume when it comes back.

@@ -131,4 +131,34 @@ final class LibraryTests: XCTestCase {
         throw XCTSkip("Compression framework only on Apple platforms")
         #endif
     }
+
+    /// A fragmented MP4 header like YouTube's: `moov` durations are cleared, the rest is kept.
+    func testFragmentedMP4HeaderDurationsCleared() throws {
+        func box(_ type: String, _ body: [UInt8]) -> [UInt8] {
+            let size = UInt32(8 + body.count)
+            return withUnsafeBytes(of: size.bigEndian, Array.init) + Array(type.utf8) + body
+        }
+        let duration: [UInt8] = [0x00, 0x69, 0x81, 0x1c]
+        let mvhd = box("mvhd", [0, 0, 0, 0] + [UInt8](repeating: 0, count: 8) + [0, 0, 0xac, 0x44] + duration + [UInt8](repeating: 1, count: 80))
+        let tkhd = box("tkhd", [0, 0, 0, 3] + [UInt8](repeating: 0, count: 8) + [0, 0, 0, 1, 0, 0, 0, 0] + duration + [UInt8](repeating: 1, count: 60))
+        let mdhd = box("mdhd", [0, 0, 0, 0] + [UInt8](repeating: 0, count: 8) + [0, 0, 0xac, 0x44] + duration + [0x55, 0xc4, 0, 0])
+        let moov = box("moov", mvhd + box("mvex", box("trex", [UInt8](repeating: 0, count: 24))) + box("trak", tkhd + box("mdia", mdhd)))
+        let file = box("ftyp", Array("dash".utf8) + [0, 0, 0, 0]) + moov + box("sidx", [0, 0, 0, 0])
+        let original = Data(file)
+
+        var data = original
+        FragmentedMP4.clearHeaderDurations(&data, offset: 0)
+        let changed = (0..<data.count).filter { data[$0] != original[$0] }
+        XCTAssertEqual(changed.count, 3 * 3, "only the three durations change (their first byte is 0)")
+        let mvhdBody = original.range(of: Data("mvhd".utf8))!.upperBound
+        XCTAssertEqual(Array(data[mvhdBody + 16 ..< mvhdBody + 20]), [0, 0, 0, 0])
+        XCTAssertEqual(Array(data[mvhdBody + 12 ..< mvhdBody + 16]), [0, 0, 0xac, 0x44], "timescale kept")
+
+        var later = original
+        FragmentedMP4.clearHeaderDurations(&later, offset: 1)
+        XCTAssertEqual(later, original, "only the start of the file has the header")
+        var cut = original.prefix(40)
+        FragmentedMP4.clearHeaderDurations(&cut, offset: 0)
+        XCTAssertEqual(cut, original.prefix(40), "a partial moov is left alone")
+    }
 }
