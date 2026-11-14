@@ -43,13 +43,13 @@ public enum AudioFetcher {
         throw YouTubeError.http(403)
     }
 
-    /// Downloads a whole song to `file` (through `<file>.part`, so a half download is never taken
-    /// for a song). `progress` gets 0...1. Returns the size.
+    /// Downloads a whole song to `file` (through a temp `.part` file of its own, so a half
+    /// download is never taken for a song, and two attempts never share one). `progress` gets 0...1. Returns the size.
     @discardableResult
     public static func download(_ videoId: String, to file: URL, progress: @escaping (Double) -> Void = { _ in }) async throws -> Int64 {
         var audio = try await YouTubeMusic.resolveAudio(videoId)
         let total = audio.contentLength
-        let part = file.appendingPathExtension("part")
+        let part = file.deletingLastPathComponent().appendingPathComponent(".\(file.lastPathComponent).\(UUID().uuidString).part")
         let fm = FileManager.default
         try fm.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
         _ = fm.createFile(atPath: part.path, contents: nil)
