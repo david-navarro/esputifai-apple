@@ -10,6 +10,7 @@
 		1F83B90EA80A66FAB62FC68A /* EsputifaiCore in Frameworks */ = {isa = PBXBuildFile; productRef = D9E75F36FEC5DA652E18D458 /* EsputifaiCore */; };
 		24B1A8C408EA6CB25690D561 /* Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095F639BABEC780B4ABFF58 /* Sheets.swift */; };
 		2ACFCAE1FA3DD529A94F59D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF8D649BA639FA351EBA6032 /* Assets.xcassets */; };
+		397188D9AA563A693D8A19B4 /* VoiceSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C7B500EC8BA073E13106898 /* VoiceSearch.swift */; };
 		4A3B76A168A848BF204BFE61 /* OfflineAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E24536B005D050A5E3464C1 /* OfflineAudio.swift */; };
 		51AD06B9004B1F845A2E51F0 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C14CED5C08F82BF0048E21 /* Player.swift */; };
 		7F90CA0220AE543FDDC33AA7 /* EsputifaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B66F667841654E9E84E907 /* EsputifaiApp.swift */; };
@@ -26,6 +27,7 @@
 		043D4ACBE120F19C75DDDEE2 /* Esputifai.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Esputifai.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10DA6604B23085F388C9F508 /* AudioLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLoader.swift; sourceTree = "<group>"; };
 		161396F83281F21AC0F9E3CA /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		1C7B500EC8BA073E13106898 /* VoiceSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSearch.swift; sourceTree = "<group>"; };
 		313B2FC1B5C87E8B4996E6BF /* AlbumViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViews.swift; sourceTree = "<group>"; };
 		4A358DE59293C61B446540DE /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		8E24536B005D050A5E3464C1 /* OfflineAudio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAudio.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				B154A5494D116E0EAA11DBB4 /* RootView.swift */,
 				EC5DDE78078315B8B6151984 /* SearchView.swift */,
 				C095F639BABEC780B4ABFF58 /* Sheets.swift */,
+				1C7B500EC8BA073E13106898 /* VoiceSearch.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 				ACB431811FA2D39FF46DEF1E /* RootView.swift in Sources */,
 				C1B29551EEC2ED8B75E72E34 /* SearchView.swift in Sources */,
 				24B1A8C408EA6CB25690D561 /* Sheets.swift in Sources */,
+				397188D9AA563A693D8A19B4 /* VoiceSearch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,7 +259,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -269,7 +273,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -332,7 +336,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -352,7 +356,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

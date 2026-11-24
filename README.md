@@ -14,11 +14,12 @@ directly; nothing runs on a server. Personal use only; not distributed, not on t
   YouTube Music: search, albums, artists, public playlists (paged), related songs, "Ir al álbum",
   audio URL resolution, byte ranges and whole-song downloads all pass.
 - The app (`App/`, SwiftUI) has not been compiled yet: it needs Xcode on a Mac.
+- v0.2.0 (2026-11-24) adds voice search; like the rest of `App/`, not yet compiled or tried.
 
 ## Features (same as Android)
 
 - **Buscar:** songs, albums, artists and public playlists ("Listas"), with suggestions while
-  typing. Under song results, "Relacionadas" (the YouTube Music radio of the first result), 10 at
+  typing, or by voice with the microphone in the search box (Android v0.9.0). Under song results, "Relacionadas" (the YouTube Music radio of the first result), 10 at
   a time.
 - **Mis listas:** local playlists. Create, rename, delete, share as a link, move songs up/down,
   remove (with "Deshacer"), play or shuffle. Each list is "En streaming" or "Guardada en el móvil".
@@ -86,7 +87,7 @@ App/
     Playback/Player.swift     queue + AVPlayer, lock screen and remote controls, play counting
     Playback/AudioLoader.swift  ytm://track/<id> for AVPlayer: lazy resolution + ranged reads
     Playback/OfflineAudio.swift saved songs: downloads, files, network state
-    UI/                       SwiftUI screens (RootView is the shell)
+    UI/                       SwiftUI screens (RootView is the shell; VoiceSearch: the search microphone)
   Resources/Assets.xcassets   icon and accent colour
 design/                       logo sources; esputifai-ios-icon.svg is the square app icon
 scripts/test-core.sh          builds and tests Core/ in Docker (swift image pinned by digest)
@@ -129,6 +130,12 @@ framework, so it is skipped on Linux). The app itself builds only in Xcode.
   downloads run while the app is open or playing; they resume when it comes back.
 - **Artists:** like Android, a search by name keeping only results credited to the artist's
   channel (two pages of songs and of albums).
+- **Voice search:** Android opens the system's dictation dialog (no permission); iOS has no
+  such dialog, so `VoiceSearch.swift` listens itself with `SFSpeechRecognizer` +
+  `AVAudioEngine`, in the phone's first language. It needs the microphone and speech recognition
+  permissions (asked the first time), shows the text in the box as it is heard, stops after
+  1.5 s of silence or a second tap, and pauses the music while listening (the microphone would
+  hear it), resuming it afterwards.
 - **Data files** (Application Support): `playlists.json`, `albums.json`, `plays.json`; plays use
   the Android format. Remembered choices in UserDefaults.
 
@@ -166,5 +173,10 @@ This is an independent personal project, not affiliated with YouTube, Google, Ap
 
 ## History
 
+- **2026-11-24:** `scripts/gen-xcodeproj.sh` mounts XcodeGen's source so it finds its setting
+  presets on Linux (without them the project had no `PRODUCT_NAME` and Xcode failed with
+  "Multiple commands produce .app"); the Linux output now matches the macOS one.
+- **2026-11-24:** v0.2.0: voice search (microphone in the search box), like Android v0.9.0; the
+  search box hint is now "¿Qué quieres escuchar?". Not yet built or tried on an iPhone.
 - **2026-11-13:** v0.1.0: port of Esputifai for Android v0.8.1 to iPhone (SwiftUI, AVPlayer, own
   InnerTube client), without Google sign-in and device sync.

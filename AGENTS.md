@@ -40,6 +40,10 @@ EsputifaiApp ──▶ RootView (SwiftUI, 4 tabs, NavigationStack per tab)
   (`@State` for dialogs, focus, drag position). Navigation is `AppModel.tab` + `paths[tab]`
   (`Route`); panels are `AppModel` properties (`showingPlayer`, `addingTrack`, `newList`,
   `showingStorage`, `incoming`).
+- Exception: `VoiceSearch` (the search microphone) is owned by `SearchView` as `@State`, since
+  only that screen uses it. It switches the audio session to `.record` while listening, pausing
+  `Player` if it was playing, then restores `.playback` and resumes. Its tap and recognizer
+  callbacks are built in `nonisolated static` functions because they run off the main thread.
 - Stores are plain classes used on the main actor: every change is written to disk (atomic)
   before the value changes, then `onChange` tells `AppModel`, which copies the values into its
   observable properties and re-syncs the offline songs.
@@ -117,7 +121,8 @@ rankings, offline rules, title keys, the shared-link format (Mac only: Compressi
 `YouTubeSmokeTests`: real YouTube Music; when they fail and the code didn't change, YouTube did.
 
 Only a real iPhone can check: playback, background audio, lock screen, AVPlayer with the
-resource loader, downloads and airplane mode, opening shared links. Say so when a change touches
+resource loader, downloads and airplane mode, opening shared links, voice search (permissions,
+microphone, the audio session handover with the player). Say so when a change touches
 them.
 
 To look at a YouTube response while fixing a parser, POST the same body as `InnerTube.music`

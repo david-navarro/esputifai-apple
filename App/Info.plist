@@ -33,6 +33,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Para buscar música diciéndola en voz alta.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Para convertir en texto lo que dices al buscar por voz.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

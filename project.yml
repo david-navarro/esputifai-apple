@@ -11,8 +11,8 @@ packages:
     path: Core
 settings:
   base:
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.2.0"
+    CURRENT_PROJECT_VERSION: "2"
     SWIFT_VERSION: "5.0"
     # Signing: pick your team (a free Apple ID works) in Xcode > Signing & Capabilities.
     # If Xcode says the bundle id is taken, change it here (it must be unique per Apple ID).
@@ -44,6 +44,9 @@ targets:
         ITSAppUsesNonExemptEncryption: false
         # Music keeps playing with the screen off or the app in the background.
         UIBackgroundModes: [audio]
+        # Voice search (VoiceSearch.swift): iOS shows these texts when it asks for permission.
+        NSMicrophoneUsageDescription: Para buscar música diciéndola en voz alta.
+        NSSpeechRecognitionUsageDescription: Para convertir en texto lo que dices al buscar por voz.
         # Shared playlists: the page of the link opens esputifai://import?d=<data>.
         CFBundleURLTypes:
           - CFBundleURLName: dev.personal.esputifai.import

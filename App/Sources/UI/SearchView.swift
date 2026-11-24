@@ -2,17 +2,18 @@ import EsputifaiCore
 import SwiftUI
 
 /// "Buscar": the search box with suggestions, the Canciones/Álbumes/Artistas/Listas selector and
-/// the results; song results are followed by "Relacionadas".
+/// the results; song results are followed by "Relacionadas". The microphone searches by voice.
 struct SearchView: View {
     @Environment(AppModel.self) private var model
     @FocusState private var typing: Bool
+    @State private var voice = VoiceSearch()
 
     var body: some View {
         @Bindable var model = model
         VStack(spacing: 8) {
             HStack {
                 Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-                TextField("Canciones, álbumes, artistas, listas…", text: $model.query)
+                TextField(voice.listening ? "Escuchando…" : "¿Qué quieres escuchar?", text: $model.query)
                     .focused($typing)
                     .submitLabel(.search)
                     .autocorrectionDisabled()
@@ -22,6 +23,15 @@ struct SearchView: View {
                     Button { model.query = "" } label: { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
                         .accessibilityLabel("Borrar")
                 }
+                Button {
+                    typing = false
+                    voice.toggle(player: model.player, onText: { model.query = $0 }, onDone: { model.search($0) })
+                } label: {
+                    Image(systemName: voice.listening ? "mic.fill" : "mic")
+                        .foregroundStyle(voice.listening ? AnyShapeStyle(.red) : AnyShapeStyle(.secondary))
+                        .symbolEffect(.pulse, isActive: voice.listening)
+                }
+                .accessibilityLabel(voice.listening ? "Dejar de escuchar" : "Buscar por voz")
             }
             .padding(10)
             .background(Color(.secondarySystemBackground), in: Capsule())
@@ -59,6 +69,12 @@ struct SearchView: View {
         }
         .navigationTitle("Buscar")
         .toolbar(.hidden, for: .navigationBar)
+        .onDisappear { voice.cancel() }
+        .alert("Búsqueda por voz", isPresented: Binding(get: { voice.problem != nil }, set: { if !$0 { voice.problem = nil } })) {
+            Button("Aceptar", role: .cancel) {}
+        } message: {
+            Text(voice.problem ?? "")
+        }
     }
 
     @ViewBuilder
