@@ -17,5 +17,7 @@ if [ ! -x "$CACHE/release/xcodegen" ]; then
   docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$SRC:/src" -v "$CACHE:/build" -w /src \
     "$IMAGE" swift build -c release --scratch-path /build --product xcodegen
 fi
-docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -e USER=esputifai -v "$PWD:/proj" -v "$CACHE:/build" -w /proj \
+# XcodeGen finds its setting presets (PRODUCT_NAME and the like) at the source path it was built
+# from, /src/SettingPresets; without that mount the project has no presets and Xcode can't build it.
+docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp -e USER=esputifai -v "$PWD:/proj" -v "$CACHE:/build" -v "$SRC:/src:ro" -w /proj \
   "$IMAGE" /build/release/xcodegen generate
